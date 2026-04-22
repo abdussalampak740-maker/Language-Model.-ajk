@@ -1,0 +1,11 @@
+{
+  "name": "Pahari Voice AI",
+  "description": "A speech-to-speech AI assistant for the Pahari language of Azad Kashmir.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "AI Speech-to-Speech",
+    "Pahari Language Support"
+  ]
+}

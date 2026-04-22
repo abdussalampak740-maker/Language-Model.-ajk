@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Nastaliq+Urdu&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-urdu: "Noto Nastaliq Urdu", serif;
+
+  --color-natural-bg: #F9F7F2;
+  --color-natural-surface: #FFFFFF;
+  --color-natural-primary: #5C6E58;
+  --color-natural-accent: #B08968;
+  --color-natural-text: #2D332C;
+  --color-natural-muted: #6B7280;
+  --color-natural-line: #E5E7EB;
+  --color-natural-glow: rgba(92, 110, 88, 0.15);
+}
+
+.urdu {
+  font-family: var(--font-urdu);
+  direction: rtl;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-natural-bg);
+    color: var(--color-natural-text);
+  }
+}
