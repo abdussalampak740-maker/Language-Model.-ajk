@@ -1,7 +1,17 @@
 import { GoogleGenAI, Modality, ThinkingLevel } from "@google/genai";
 
-// Initialize the Gemini API client
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+// Lazy initialization function
+let aiInstance: GoogleGenAI | null = null;
+function getAI() {
+  if (!aiInstance) {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      throw new Error("GEMINI_API_KEY is missing. Please add it to your environment variables.");
+    }
+    aiInstance = new GoogleGenAI({ apiKey });
+  }
+  return aiInstance;
+}
 
 export interface VoiceResponse {
   text: string;
@@ -14,6 +24,7 @@ export interface VoiceResponse {
  * Optimized for speed using ThinkingLevel.LOW
  */
 export async function processPahariSpeech(base64Audio: string, customRules: string = ""): Promise<VoiceResponse> {
+  const ai = getAI();
   try {
     // Phase 1: Understanding & Inference (gemini-3-flash-preview with LOW thinking level for speed)
     const inferenceResponse = await ai.models.generateContent({
