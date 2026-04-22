@@ -6,7 +6,10 @@ export function useAudioRecorder() {
   const mediaRecorder = useRef<MediaRecorder | null>(null);
   const audioChunks = useRef<Blob[]>([]);
 
+  const [error, setError] = useState<string | null>(null);
+
   const startRecording = useCallback(async () => {
+    setError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder.current = new MediaRecorder(stream);
@@ -26,9 +29,15 @@ export function useAudioRecorder() {
 
       mediaRecorder.current.start();
       setIsRecording(true);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Error accessing microphone:", err);
-      alert("Please allow microphone access to use this app.");
+      let msg = "Microphone access denied.";
+      if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+        msg = "Microphone access was denied. Please allow microphone access in your browser settings and refresh.";
+      } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+        msg = "No microphone found on this device.";
+      }
+      setError(msg);
     }
   }, []);
 
@@ -41,11 +50,13 @@ export function useAudioRecorder() {
 
   const clearAudio = useCallback(() => {
     setAudioBlob(null);
+    setError(null);
   }, []);
 
   return {
     isRecording,
     audioBlob,
+    error,
     startRecording,
     stopRecording,
     clearAudio

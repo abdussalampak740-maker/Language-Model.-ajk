@@ -5,35 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pahari Voice AI</title>
     <script>
-      // High-priority shim to prevent "Cannot set property fetch" errors
-      // occurring in certain restricted environments.
       (function() {
-        function shimFetch(obj) {
-          try {
-            var descriptor = Object.getOwnPropertyDescriptor(obj, 'fetch');
-            if (descriptor && !descriptor.writable && !descriptor.set) {
-              var _currentFetch = obj.fetch;
-              Object.defineProperty(obj, 'fetch', {
-                get: function() { return _currentFetch; },
-                set: function(v) { 
-                  console.warn('Fetch override intercepted.');
-                  _currentFetch = v; 
-                },
-                configurable: true,
-                enumerable: true
-              });
-              return true;
-            }
-          } catch (e) {}
-          return false;
-        }
-
-        // Try shim on window directly
-        if (!shimFetch(window)) {
-          // If not on window, try on Window.prototype or window.__proto__
-          shimFetch(Object.getPrototypeOf(window)) || shimFetch(window.constructor.prototype);
-        }
-
         window.process = { env: { NODE_ENV: 'development' } };
       })();
     </script>

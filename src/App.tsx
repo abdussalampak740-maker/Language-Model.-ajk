@@ -12,13 +12,21 @@ import { playPcmAudio } from './lib/pcmUtils';
 import { getLearnedRules, addLearnedRule, clearLearnedRules, rulesToPrompt } from './lib/dialectStore';
 
 export default function App() {
-  const { isRecording, audioBlob, startRecording, stopRecording, clearAudio } = useAudioRecorder();
+  const { isRecording, audioBlob, error: micError, startRecording, stopRecording, clearAudio } = useAudioRecorder();
   const [response, setResponse] = useState<VoiceResponse | null>(null);
   const [status, setStatus] = useState<'idle' | 'listening' | 'thinking' | 'speaking'>('idle');
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [learnedRules, setLearnedRules] = useState(getLearnedRules());
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [newRuleText, setNewRuleText] = useState("");
+
+  // Sync microphone errors
+  useEffect(() => {
+    if (micError) {
+      setErrorMsg(micError);
+      setStatus('idle');
+    }
+  }, [micError]);
 
   // Auto-process once audio is recorded
   useEffect(() => {
